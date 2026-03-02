@@ -1,0 +1,27 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Compile check
+        run: python -m compileall scripts
+
+      - name: Build data (with retry)
+        run: |
+          for i in 1 2; do
+            python scripts/build_data.py --out-dir /tmp/dashboard_data && break
+            echo "Attempt $i failed, retrying..."
+            sleep 10
+          done
