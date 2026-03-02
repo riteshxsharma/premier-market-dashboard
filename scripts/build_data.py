@@ -16,7 +16,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from scipy.stats import rankdata
 
@@ -378,6 +378,7 @@ def main():
         "column_ranges": column_ranges,
     }
     meta = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
         "SECTOR_COLORS": SECTOR_COLORS,
         "TICKER_TO_SECTOR": TICKER_TO_SECTOR,
         "Industries_COLORS": Industries_COLORS,

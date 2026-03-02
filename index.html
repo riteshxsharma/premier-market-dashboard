@@ -112,6 +112,7 @@
 </head>
 <body>
     <div class="ticker-list">
+        <div id="lastUpdated" style="font-size:12px;opacity:.7;margin-top:4px;padding:4px 8px"></div>
         <div class="economic-events" style="position:relative">
             <button class="events-button">📅 MACRO EVENTS</button>
             <div class="events-content" id="events-content"></div>
@@ -419,6 +420,10 @@
             var events = results[1];
             meta = results[2];
             renderEvents(events);
+            if (meta && meta.generated_at) {
+                var d = new Date(meta.generated_at);
+                document.getElementById('lastUpdated').textContent = 'Last updated: ' + d.toLocaleString();
+            }
             renderGroups();
         }).catch(function() {
             document.getElementById('groups-container').innerHTML = '<div class="loading-msg">LOADING DATA... (Run scripts/build_data.py or wait for GitHub Actions)</div>';
