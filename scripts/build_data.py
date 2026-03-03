@@ -278,6 +278,16 @@ def create_rs_chart_png(rrs_data, ticker, charts_dir):
 def get_stock_data(ticker_symbol, charts_dir):
     try:
         stock = yf.Ticker(ticker_symbol)
+        try:
+            info = stock.info or {}
+        except Exception:
+            info = {}
+        name = (
+            info.get("shortName")
+            or info.get("longName")
+            or info.get("displayName")
+            or ""
+        )
         hist = stock.history(period="21d")
         daily = stock.history(period="60d")
         if len(hist) < 2 or len(daily) < 50:
@@ -316,6 +326,7 @@ def get_stock_data(ticker_symbol, charts_dir):
 
         return {
             "ticker": ticker_symbol,
+            "name": name,
             "daily": round(daily_change, 2) if daily_change is not None else None,
             "intra": round(intraday_change, 2) if intraday_change is not None else None,
             "5d": round(five_day_change, 2) if five_day_change is not None else None,

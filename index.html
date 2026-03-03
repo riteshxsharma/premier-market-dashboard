@@ -105,6 +105,7 @@
         .column-guide dt:first-child { margin-top: 0; }
         .column-guide dd { margin: 2px 0 0 12px; color: #cbd5e1; }
         .loading-msg { padding: 20px; text-align: center; color: #9ca3af; }
+        .name-col { max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #1a1a1a; }
         ::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 4px; }
@@ -225,6 +226,7 @@
             html += th('rs', '1M-VARS');
             html += th('rs', 'VARS');
             html += th('letf', 'LETF');
+            html += th('name', 'Name');
             html += '</tr></thead><tbody id="' + safeId + '-body">';
             for (var i = 0; i < rows.length; i++) {
                 var r = rows[i];
@@ -258,7 +260,9 @@
                 if (r.long && r.long.length) html += r.long.map(function(etf){ return '<span class="long-etf" onclick="event.stopPropagation();updateChart(\'' + etf + '\')">' + etf + '</span>'; }).join(', ');
                 if (r.short && r.short.length) { if (r.long && r.long.length) html += '<br>'; html += r.short.map(function(etf){ return '<span class="short-etf" onclick="event.stopPropagation();updateChart(\'' + etf + '\')">' + etf + '</span>'; }).join(', '); }
                 if (!(r.long && r.long.length) && !(r.short && r.short.length)) html += '-';
-                html += '</td></tr>';
+                html += '</td>';
+                html += '<td class="name-col" title="' + escapeHtml(r.name || '') + '">' + escapeHtml(r.name || '') + '</td>';
+                html += '</tr>';
             }
             html += '</tbody></table></div>';
         }
@@ -333,7 +337,7 @@
         state.sortBy = sortBy;
         if (state.count === 2) state.direction *= -1; else state.direction = 1;
 
-        var colMap = { symbol: 0, abc: 1, daily: 2, intra: 3, '5d': 4, '20d': 5, atr_pct: 6, dist_sma50_atr: 7, rs: 8, letf: 10 };
+        var colMap = { symbol: 0, abc: 1, daily: 2, intra: 3, '5d': 4, '20d': 5, atr_pct: 6, dist_sma50_atr: 7, rs: 8, letf: 10, name: 11 };
         var hi = colMap[sortBy] !== undefined ? colMap[sortBy] : 9;
         var headerIndices = (sortBy === 'rs') ? [8, 9] : [hi];  /* highlight both 1M-VARS and VARS when sorting by rs */
         headerIndices.forEach(function(idx) {
@@ -363,6 +367,10 @@
                 return ((a.getAttribute('data-abc') || '').localeCompare(b.getAttribute('data-abc') || '')) * state.direction;
             } else if (sortBy === 'letf') {
                 return (parseInt(a.getAttribute('data-letf') || '0') - parseInt(b.getAttribute('data-letf') || '0')) * state.direction;
+            } else if (sortBy === 'name') {
+                var aN = a.querySelector('td.name-col') ? (a.querySelector('td.name-col').title || '') : '';
+                var bN = b.querySelector('td.name-col') ? (b.querySelector('td.name-col').title || '') : '';
+                return aN.toLowerCase().localeCompare(bN.toLowerCase()) * state.direction;
             } else {
                 return (parseFloat(a.getAttribute('data-' + sortBy)) - parseFloat(b.getAttribute('data-' + sortBy))) * state.direction;
             }
