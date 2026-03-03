@@ -29,7 +29,7 @@
         }
 
         .ticker-list {
-            width: 900px;
+            width: 950px;
             background-color: #1a1a1a;
             padding: 0;
             overflow-y: auto;
@@ -310,7 +310,7 @@
         }
 
         .economic-events {
-            margin-bottom: 10px;
+            margin-bottom: 0;
         }
 
         .events-button,
@@ -321,8 +321,9 @@
             background-color: #2d3748;
             color: #e0e0e0;
             padding: 8px 12px;
-            border: 1px solid #4a5568;
-            border-radius: 4px;
+            border: none;
+            border-bottom: 1px solid #444;
+            border-radius: 0;
             cursor: pointer;
             width: 100%;
             text-align: left;
@@ -387,7 +388,7 @@
         }
 
         .column-guide {
-            margin-bottom: 10px;
+            margin-bottom: 0;
             position: relative;
         }
 
@@ -465,7 +466,7 @@
 
 <body>
     <div class="ticker-list">
-        <div id="lastUpdated" style="font-size:12px;opacity:.7;margin-top:4px;padding:4px 8px"></div>
+        <div id="lastUpdated" style="font-size:12px;opacity:.7;padding:5px 12px;background-color:#2d3748;border-bottom:1px solid #444;"></div>
         <div class="economic-events" style="position:relative">
             <button class="events-button">📅 MACRO EVENTS</button>
             <div class="events-content" id="events-content"></div>
