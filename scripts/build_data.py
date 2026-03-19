@@ -401,12 +401,21 @@ def main():
     events_path = os.path.join(out_dir, "events.json")
     meta_path = os.path.join(out_dir, "meta.json")
 
+    def _clean(obj):
+        if isinstance(obj, float) and (obj != obj or obj == float('inf') or obj == float('-inf')):
+            return None
+        if isinstance(obj, dict):
+            return {k: _clean(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [_clean(v) for v in obj]
+        return obj
+
     with open(snapshot_path, "w", encoding="utf-8") as f:
-        json.dump(snapshot, f, ensure_ascii=False, indent=2)
+        json.dump(_clean(snapshot), f, ensure_ascii=False, indent=2)
     with open(events_path, "w", encoding="utf-8") as f:
-        json.dump(events, f, ensure_ascii=False, indent=2)
+        json.dump(_clean(events), f, ensure_ascii=False, indent=2)
     with open(meta_path, "w", encoding="utf-8") as f:
-        json.dump(meta, f, ensure_ascii=False, indent=2)
+        json.dump(_clean(meta), f, ensure_ascii=False, indent=2)
 
     print("Wrote", snapshot_path, events_path, meta_path, "and charts in", charts_dir)
 
